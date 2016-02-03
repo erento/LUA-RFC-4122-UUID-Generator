@@ -160,7 +160,7 @@ local function getUUID(name,nameSpace,namespaceLookupTable)
 	guid = guid .. padbits(_upper(clock_seq_low),2) .. "-"
 	guid = guid .. padbits(_upper(node),12)
 	--
-	return guid
+	return string.lower(guid)
 end
 --
 M.getUUID = getUUID
