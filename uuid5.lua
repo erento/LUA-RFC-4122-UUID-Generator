@@ -2,19 +2,19 @@
 The MIT License (MIT)
 Copyright (c) 2012 Toby Jennings
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
-associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, 
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial
 portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT 
-NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
@@ -24,6 +24,13 @@ package.cpath=package.cpath .. ";/opt/local/share/luarocks/lib/lua/5.1/?.so"
 local crypto = require("crypto")
 
 local M = {}
+local defaultNamespaceLookupTable = {
+  ["nsURL"]  = "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
+  ["nsDNS"]  = "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+  ["nsOID"]  = "6ba7b812-9dad-11d1-80b4-00c04fd430c8",
+  ["nsX500"] = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+}
+
 -----
 local function num2bs(num)
 	local _mod = math.fmod or math.mod
@@ -34,7 +41,7 @@ local function num2bs(num)
 	while(num  > 0) do
 		 result = _mod(num,2) .. result
 		 num = _floor(num*0.5)
-	end              
+	end
 	return result
 end
 --
@@ -101,23 +108,15 @@ local function padbits(num,bits)
 	return num
 end
 --
-local function getUUID(name,nameSpace)
+local function getUUID(name,nameSpace,namespaceLookupTable)
 	--For a v5 UUID, some common namespaces are specified in RFC4122.
 	--This module will support these as well as provide an internal
 	--Namespace UUID for arbitrary strings
 	local nameSpaceUUID
 	--
-	if     nameSpace == "nsURL" then
-		nameSpaceUUID="6ba7b811-9dad-11d1-80b4-00c04fd430c8"
-	elseif nameSpace == "nsDNS" then
-		nameSpaceUUID="6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-	elseif nameSpace == "nsOID" then
-		nameSpaceUUID="6ba7b812-9dad-11d1-80b4-00c04fd430c8"
-	elseif nameSpace == "nsX500" then
-		nameSpaceUUID="6ba7b814-9dad-11d1-80b4-00c04fd430c8"
-	else --an arbitrary v4 UUID--
-		nameSpaceUUID="51C3AF2C-0C43-410E-9F1B-CA01FF66333E"
-	end
+  local lookupTable = namespaceLookupTable or defaultNamespaceLookupTable
+  nameSpaceUUID = lookupTable[nameSpace] or '51C3AF2C-0C43-410E-9F1B-CA01FF66333E'
+
 	--
 	nameSpaceUUID = string.gsub(nameSpaceUUID,"-", "")
 	nameSpaceUUID = hex2bytes(nameSpaceUUID)
@@ -165,4 +164,22 @@ local function getUUID(name,nameSpace)
 end
 --
 M.getUUID = getUUID
+
+-- Add a new namespace to lookuptable
+--
+-- @param namespace (string)
+--   Name of the namespace to add
+-- @param uuid (string, uuid, optional)
+--   The uuid to assign to that namespace. If not
+--   provided, a new uuid will created from the
+--   namespace string.
+-- @return The uuid for the given namespace
+function M.addNamespace(namespace, uuid)
+  if not uuid then
+    uuid = getUUID(namespace,'OID')
+  end
+  defaultNamespaceLookupTable[namespace] = uuid
+  return uuid
+end
+
 return M
