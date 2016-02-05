@@ -1,5 +1,5 @@
-local uuid4= require("uuid4")
-local uuid5= require("uuid5")
+local uuid4= require("src.uuid4")
+local uuid5= require("src.uuid5")
 
 --A v4 UUID
 print( uuid4.getUUID() )
