@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 --]]
 
 --LuaCrypto is a Lua frontend to the OpenSSL crypto library
---Lua rocks is one way to obtain this module
-package.cpath=package.cpath .. ";/opt/local/share/luarocks/lib/lua/5.1/?.so"
 local crypto = require("crypto")
 
 local M = {}
