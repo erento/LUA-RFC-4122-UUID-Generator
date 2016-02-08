@@ -186,7 +186,7 @@ M.getUUID = getUUID
 -- @return The uuid for the given namespace
 function M.addNamespace(namespace, uuid)
   if not uuid then
-    uuid = getUUID(namespace,'OID')
+    uuid = getUUID(namespace,'nsOID')
   end
   defaultNamespaceLookupTable[namespace] = uuid
   return uuid
