@@ -18,6 +18,18 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
+local string = string
+local math = math
+local os = os
+
+-- Avoid polluting the global environment.
+-- If we are in Lua 5.1 this function exists.
+if _G.setfenv then
+	setfenv(1, {})
+else -- Lua 5.2.
+	_ENV = nil
+end
+
 local M = {}
 -----
 math.randomseed( os.time() )
