@@ -35,10 +35,10 @@ end
 
 local M = {}
 local defaultNamespaceLookupTable = {
-  ["nsURL"]  = "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
-  ["nsDNS"]  = "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-  ["nsOID"]  = "6ba7b812-9dad-11d1-80b4-00c04fd430c8",
-  ["nsX500"] = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+	["nsURL"]  = "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
+	["nsDNS"]  = "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+	["nsOID"]  = "6ba7b812-9dad-11d1-80b4-00c04fd430c8",
+	["nsX500"] = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 }
 
 -----
@@ -124,8 +124,8 @@ local function getUUID(name,nameSpace,namespaceLookupTable)
 	--Namespace UUID for arbitrary strings
 	local nameSpaceUUID
 	--
-  local lookupTable = namespaceLookupTable or defaultNamespaceLookupTable
-  nameSpaceUUID = lookupTable[nameSpace] or '51C3AF2C-0C43-410E-9F1B-CA01FF66333E'
+	local lookupTable = namespaceLookupTable or defaultNamespaceLookupTable
+	nameSpaceUUID = lookupTable[nameSpace] or '51C3AF2C-0C43-410E-9F1B-CA01FF66333E'
 
 	--
 	nameSpaceUUID = string.gsub(nameSpaceUUID,"-", "")
@@ -185,11 +185,11 @@ M.getUUID = getUUID
 --   namespace string.
 -- @return The uuid for the given namespace
 function M.addNamespace(namespace, uuid)
-  if not uuid then
-    uuid = getUUID(namespace,'nsOID')
-  end
-  defaultNamespaceLookupTable[namespace] = uuid
-  return uuid
+	if not uuid then
+		uuid = getUUID(namespace,'nsOID')
+	end
+	defaultNamespaceLookupTable[namespace] = uuid
+	return uuid
 end
 
 return M
