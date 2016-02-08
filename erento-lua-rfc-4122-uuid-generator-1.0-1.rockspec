@@ -1,5 +1,5 @@
 package = "erento-LUA-RFC-4122-UUID-Generator"
-version = "1.0-0"
+version = "1.0-1"
 source = {
   url = "git://github.com/erento/LUA-RFC-4122-UUID-Generator.git"
 }
